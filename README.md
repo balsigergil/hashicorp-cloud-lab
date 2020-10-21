@@ -20,3 +20,9 @@ This Vagrantfile deploys the following services on 3 virtual machines :
 - 1 Nomad server (VM 2) : [http://192.168.33.11:4646/ui](http://192.168.33.11:4646/ui)
 - 2 Nomad clients (VM 2 and 3) : 192.168.33.11, 192.168.33.12
 
+## TODO
+- Integrate [Vault](https://www.vaultproject.io/)
+- Setup a load balancer (Traefik or HAProxy)
+- Integrate [Waypoint](https://www.waypointproject.io/)
+- Integrate [Boundary](https://www.boundaryproject.io/)
+- (Integrate [Terraform](https://www.terraform.io/)) *I don't know why but why not*
