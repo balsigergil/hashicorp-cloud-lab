@@ -96,8 +96,6 @@
       file:
         path: /etc/nomad.d
         state: directory
-        recurse: yes
-        mode: 0640
 
     - name: Create Nomad configuration file
       template:
