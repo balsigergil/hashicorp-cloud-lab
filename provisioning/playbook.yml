@@ -1,0 +1,146 @@
+---
+- name: Install Consul
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install unzip
+      apt:
+        name: unzip
+        state: present
+        update_cache: yes
+
+    - name: Download Consul binary
+      unarchive:
+        src: "{{consul_url}}/{{consul_version}}/consul_{{consul_version}}_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: yes
+        owner: root
+        group: root
+
+    - name: Setup bash autocompletion
+      command: consul -autocomplete-install && complete -C /usr/local/bin/consul consul
+      become_user: vagrant
+      ignore_errors: yes
+
+    - name: Add Consul system user
+      user:
+        name: consul
+        system: yes
+        home: /etc/consul.d
+        shell: /bin/false
+        state: present
+
+    - name: Create Consul data directory
+      file:
+        path: /opt/consul
+        owner: consul
+        group: consul
+        recurse: yes
+        state: directory
+    
+    - name: Create Consul configuration directory
+      file:
+        path: /etc/consul.d
+        state: directory
+        owner: consul
+        group: consul
+        recurse: yes
+
+    - name: Create Consul configuration file
+      template:
+        src: consul.hcl.j2
+        dest: /etc/consul.d/consul.hcl
+        mode: 0640
+        owner: consul
+        group: consul
+
+- name: Setup Consul server
+  hosts: consul-server
+  become: yes
+  tasks:
+    - name: Create Consul server configuration file
+      template:
+        src: consul_server.hcl.j2
+        dest: /etc/consul.d/server.hcl
+        mode: 0640
+        owner: consul
+        group: consul
+
+- name: Install Nomad
+  hosts: nomad
+  become: yes
+  tasks:
+    - name: Install unzip and openjdk
+      apt:
+        name: [ unzip, openjdk-11-jdk ]
+        state: present
+        update_cache: yes
+
+    - name: Download Nomad binary
+      unarchive:
+        src: "{{nomad_url}}/{{nomad_version}}/nomad_{{nomad_version}}_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: yes
+
+    - name: Setup bash autocompletion
+      command: nomad -autocomplete-install && complete -C /usr/local/bin/nomad nomad
+      become_user: vagrant
+      ignore_errors: yes
+
+    - name: Create Nomad data directory
+      file:
+        path: /opt/nomad
+        state: directory
+    
+    - name: Create Nomad configuration directory
+      file:
+        path: /etc/nomad.d
+        state: directory
+        recurse: yes
+        mode: 0640
+
+    - name: Create Nomad configuration file
+      template:
+        src: nomad.hcl.j2
+        dest: /etc/nomad.d/nomad.hcl
+        mode: 0640
+
+- name: Setup Nomad server
+  hosts: nomad-server
+  become: yes
+  tasks:
+    - name: Create Nomad server configuration file
+      template:
+        src: nomad_server.hcl.j2
+        dest: /etc/nomad.d/server.hcl
+        mode: 0640
+
+- name: Consul service
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create Consul service
+      copy:
+        src: consul.service
+        dest: /etc/systemd/system/consul.service
+
+    - name: Enable and start Consul service
+      service:
+        name: consul
+        state: started
+        enabled: yes
+
+- name: Nomad service
+  hosts: nomad
+  become: yes
+  tasks: 
+    - name: Create Nomad service
+      copy:
+        src: nomad.service
+        dest: /etc/systemd/system/nomad.service
+
+    - name: Enable and start Nomad service
+      service:
+        name: nomad
+        state: started
+        enabled: yes
