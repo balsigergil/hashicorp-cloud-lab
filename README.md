@@ -24,7 +24,8 @@ This Vagrantfile deploys the following services on 4 virtual machines :
 
 ## TODO
 - Integrate [Vault](https://www.vaultproject.io/)
-- Setup a load balancer (Traefik or HAProxy)
+- Integrate [Terraform](https://www.terraform.io/)
+- Setup a load balancer (Fabio, Traefik or HAProxy)
+- Setup [ELK Stack](https://www.elastic.co/what-is/elk-stack)
 - Integrate [Waypoint](https://www.waypointproject.io/)
 - Integrate [Boundary](https://www.boundaryproject.io/)
-- (Integrate [Terraform](https://www.terraform.io/)) *I don't know why but why not*
