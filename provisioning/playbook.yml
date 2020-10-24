@@ -1,6 +1,6 @@
 ---
 - name: Install Consul
-  hosts: all
+  hosts: consul
   become: yes
   tasks:
     - name: Install unzip
@@ -14,13 +14,11 @@
         src: "{{consul_url}}/{{consul_version}}/consul_{{consul_version}}_linux_amd64.zip"
         dest: /usr/local/bin
         remote_src: yes
-        owner: root
-        group: root
+        creates: /usr/local/bin/consul
 
     - name: Setup bash autocompletion
-      command: consul -autocomplete-install && complete -C /usr/local/bin/consul consul
+      shell: consul -autocomplete-install &>/dev/null && complete -C /usr/local/bin/consul consul &>/dev/null
       become_user: vagrant
-      ignore_errors: yes
 
     - name: Add Consul system user
       user:
@@ -70,22 +68,41 @@
   hosts: nomad
   become: yes
   tasks:
-    - name: Install unzip and openjdk
+    - name: Install unzip
       apt:
-        name: [ unzip, openjdk-11-jdk ]
+        name: [ unzip ]
         state: present
         update_cache: yes
+
+    - name: Get Docker installer script
+      get_url:
+        url: https://get.docker.com
+        dest: ./get-docker.sh
+        force: yes
+        mode: u+x
+
+    - name: Install Docker
+      shell: 
+        cmd: ./get-docker.sh
+        executable: /bin/sh
+        creates: /usr/bin/docker
+
+    - name: Add Vagrant user to docker group
+      user:
+        name: vagrant
+        append: yes
+        groups: docker
 
     - name: Download Nomad binary
       unarchive:
         src: "{{nomad_url}}/{{nomad_version}}/nomad_{{nomad_version}}_linux_amd64.zip"
         dest: /usr/local/bin
         remote_src: yes
+        creates: /usr/local/bin/nomad
 
     - name: Setup bash autocompletion
-      command: nomad -autocomplete-install && complete -C /usr/local/bin/nomad nomad
+      shell: nomad -autocomplete-install &>/dev/null && complete -C /usr/local/bin/nomad nomad &>/dev/null
       become_user: vagrant
-      ignore_errors: yes
 
     - name: Create Nomad data directory
       file:
@@ -113,8 +130,18 @@
         dest: /etc/nomad.d/server.hcl
         mode: 0640
 
+- name: Setup Nomad nodes
+  hosts: nomad_nodes
+  become: yes
+  tasks:
+    - name: Create client config file
+      template:
+        src: nomad_client.hcl.j2
+        dest: /etc/nomad.d/client.hcl
+        mode: 0640
+
 - name: Consul service
-  hosts: all
+  hosts: consul
   become: yes
   tasks:
     - name: Create Consul service
@@ -142,3 +169,13 @@
         name: nomad
         state: started
         enabled: yes
+
+- name: Setup /etc/hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Add hosts in /etc/hosts
+      blockinfile:
+        path: /etc/hosts
+        block: "{{etc_hosts}}"
+        state: present
