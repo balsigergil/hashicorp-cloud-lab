@@ -14,11 +14,13 @@ vagrant up
 
 ## What's in the box
 
-This Vagrantfile deploys the following services on 3 virtual machines :
+This Vagrantfile deploys the following services on 4 virtual machines :
 
 - 1 Consul server (VM 1) : [http://192.168.33.10:8500/ui](http://192.168.33.10:8500/ui)
 - 1 Nomad server (VM 2) : [http://192.168.33.11:4646/ui](http://192.168.33.11:4646/ui)
-- 2 Nomad clients (VM 2 and 3) : 192.168.33.11, 192.168.33.12
+- 3 Nomad clients (VM 2, 3 and 4) : 192.168.33.11, 192.168.33.12, 192.168.33.13
+
+*The Nomad server is also a Nomad client*
 
 ## TODO
 - Integrate [Vault](https://www.vaultproject.io/)

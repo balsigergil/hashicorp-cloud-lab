@@ -17,8 +17,10 @@
         creates: /usr/local/bin/consul
 
     - name: Setup bash autocompletion
-      shell: consul -autocomplete-install &>/dev/null && complete -C /usr/local/bin/consul consul &>/dev/null
-      become_user: vagrant
+      lineinfile: 
+        path: /home/vagrant/.bashrc
+        line: complete -C /usr/local/bin/consul consul
+        state: present
 
     - name: Add Consul system user
       user:
@@ -78,7 +80,6 @@
       get_url:
         url: https://get.docker.com
         dest: ./get-docker.sh
-        force: yes
         mode: u+x
 
     - name: Install Docker
@@ -101,8 +102,10 @@
         creates: /usr/local/bin/nomad
 
     - name: Setup bash autocompletion
-      shell: nomad -autocomplete-install &>/dev/null && complete -C /usr/local/bin/nomad nomad &>/dev/null
-      become_user: vagrant
+      lineinfile: 
+        path: /home/vagrant/.bashrc
+        line: complete -C /usr/local/bin/nomad nomad
+        state: present
 
     - name: Create Nomad data directory
       file:
@@ -131,7 +134,7 @@
         mode: 0640
 
 - name: Setup Nomad nodes
-  hosts: nomad_nodes
+  hosts: nomad_clients
   become: yes
   tasks:
     - name: Create client config file
