@@ -1,0 +1,39 @@
+job "waypoint-server" {
+
+    datacenters = [ "dc1" ]
+
+    group "waypoint-server" {
+
+        network {
+
+            port "server" {
+                to = 9701
+            }
+
+            port "ui" {
+                static = 9702
+            }
+        }
+
+        task "server" {
+
+            driver = "docker"
+
+            config {
+                image = "hashicorp/waypoint:latest"
+                args  = [
+                    "server",
+                    "run",
+                    "-accept-tos",
+                    "-vvv",
+                    "-db=/alloc/data.db",
+                    "-listen-grpc=0.0.0.0:9701",
+                    "-listen-http=0.0.0.0:9702"
+                ]
+            }
+
+        }
+
+    }
+
+}

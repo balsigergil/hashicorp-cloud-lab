@@ -1,8 +1,14 @@
 ---
 - name: Install Consul
-  hosts: consul
+  hosts: all
   become: yes
   tasks:
+    - name: Add hosts in /etc/hosts
+      blockinfile:
+        path: /etc/hosts
+        block: "{{etc_hosts}}"
+        state: present
+
     - name: Install unzip
       apt:
         name: unzip
@@ -27,6 +33,7 @@
         name: consul
         system: yes
         home: /etc/consul.d
+        create_home: no
         shell: /bin/false
         state: present
 
@@ -44,7 +51,6 @@
         state: directory
         owner: consul
         group: consul
-        recurse: yes
 
     - name: Create Consul configuration file
       template:
@@ -55,7 +61,7 @@
         group: consul
 
 - name: Setup Consul server
-  hosts: consul-server
+  hosts: server
   become: yes
   tasks:
     - name: Create Consul server configuration file
@@ -67,15 +73,9 @@
         group: consul
 
 - name: Install Nomad
-  hosts: nomad
+  hosts: all
   become: yes
   tasks:
-    - name: Install unzip
-      apt:
-        name: [ unzip ]
-        state: present
-        update_cache: yes
-
     - name: Get Docker installer script
       get_url:
         url: https://get.docker.com
@@ -123,8 +123,14 @@
         dest: /etc/nomad.d/nomad.hcl
         mode: 0640
 
+    - name: Add Nomad address env variable
+      lineinfile:
+        path: /home/vagrant/.bashrc
+        line: "export NOMAD_ADDR='http://{{ansible_facts.eth1.ipv4.address}}:4646'"
+        state: present
+
 - name: Setup Nomad server
-  hosts: nomad-server
+  hosts: server
   become: yes
   tasks:
     - name: Create Nomad server configuration file
@@ -143,8 +149,8 @@
         dest: /etc/nomad.d/client.hcl
         mode: 0640
 
-- name: Consul service
-  hosts: consul
+- name: Consul and Nomad services
+  hosts: all
   become: yes
   tasks:
     - name: Create Consul service
@@ -158,10 +164,6 @@
         state: started
         enabled: yes
 
-- name: Nomad service
-  hosts: nomad
-  become: yes
-  tasks: 
     - name: Create Nomad service
       copy:
         src: nomad.service
@@ -173,12 +175,87 @@
         state: started
         enabled: yes
 
-- name: Setup /etc/hosts
-  hosts: all
+- name: Install Waypoint
+  hosts: server
   become: yes
   tasks:
-    - name: Add hosts in /etc/hosts
-      blockinfile:
-        path: /etc/hosts
-        block: "{{etc_hosts}}"
+    - name: Download Waypoint binary
+      unarchive:
+        src: "{{waypoint_url}}/{{waypoint_version}}/waypoint_{{waypoint_version}}_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: yes
+        creates: /usr/local/bin/waypoint
+
+    - name: Setup bash autocompletion
+      lineinfile: 
+        path: /home/vagrant/.bashrc
+        line: complete -C /usr/local/bin/waypoint waypoint
+        state: present
+
+- name: Install Vault server
+  hosts: server
+  become: yes
+  tasks:
+    - name: Download Vault binary
+      unarchive:
+        src: "{{vault_url}}/{{vault_version}}/vault_{{vault_version}}_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: yes
+        creates: /usr/local/bin/vault
+    
+    - name: Setup bash autocompletion
+      lineinfile: 
+        path: /home/vagrant/.bashrc
+        line: complete -C /usr/local/bin/vault vault
+        state: present
+
+    - name: Give Vault the ability to use the mlock syscall without running the process as root
+      shell: setcap cap_ipc_lock=+ep /usr/local/bin/vault
+
+    - name: Add Vault system user
+      user:
+        name: vault
+        system: yes
+        home: /etc/vault.d
+        create_home: no
+        shell: /bin/false
+        state: present
+    
+    - name: Create Vault configuration directory
+      file:
+        path: /etc/vault.d
+        state: directory
+        owner: vault
+        group: vault
+
+    - name: Create Vault configuration file
+      template:
+        src: vault.hcl.j2
+        dest: /etc/vault.d/vault.hcl
+        mode: 0640
+        owner: vault
+        group: vault
+
+    - name: Create Vault service
+      copy:
+        src: vault.service
+        dest: /etc/systemd/system/vault.service
+
+    - name: Create Vault storage directory
+      file:
+        path: /opt/raft
+        state: directory
+        owner: vault
+        group: vault
+
+    - name: Enable and start Vault service
+      service:
+        name: vault
+        state: started
+        enabled: yes
+
+    - name: Add Vault address env variable
+      lineinfile:
+        path: /home/vagrant/.bashrc
+        line: "export VAULT='http://{{ansible_facts.eth1.ipv4.address}}:8200'"
         state: present

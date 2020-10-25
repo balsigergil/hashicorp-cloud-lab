@@ -1,0 +1,14 @@
+listener "tcp" {
+  address = "{{ansible_facts.eth1.ipv4.address}}:8200"
+  tls_disable = true
+}
+
+storage "raft" {
+  path = "/opt/raft"
+  node_id = "raft_node_1"
+}
+
+api_addr = "http://{{ansible_facts.eth1.ipv4.address}}:8200"
+cluster_addr = "http://{{ansible_facts.eth1.ipv4.address}}:8201"
+
+ui = true
