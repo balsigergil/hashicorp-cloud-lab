@@ -257,5 +257,5 @@
     - name: Add Vault address env variable
       lineinfile:
         path: /home/vagrant/.bashrc
-        line: "export VAULT='http://{{ansible_facts.eth1.ipv4.address}}:8200'"
+        line: "export VAULT_ADDR='http://{{ansible_facts.eth1.ipv4.address}}:8200'"
         state: present

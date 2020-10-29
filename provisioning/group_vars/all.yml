@@ -2,7 +2,7 @@ consul_version: 1.8.4
 consul_url: https://releases.hashicorp.com/consul
 consul_key: VRXNV3bMNRJBAEq20xBe+FOBcUO68ztFgHuXkzovO5U=
 
-nomad_version: 0.12.6
+nomad_version: 1.0.0-beta2
 nomad_url: https://releases.hashicorp.com/nomad
 
 waypoint_version: 0.1.3
