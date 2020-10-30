@@ -6,9 +6,9 @@ Vagrant.configure("2") do |config|
   etc_hosts = ""
 
 	NODES = [
-  	{ :hostname => "server", :ip => "192.168.33.10", :cpus => 2, :memory => 4096 },
-  	{ :hostname => "node-1", :ip => "192.168.33.11", :cpus => 1, :memory => 1024 },
-  	{ :hostname => "node-2", :ip => "192.168.33.12", :cpus => 1, :memory => 1024 },
+  	{ :hostname => "server", :ip => "192.168.33.10", :cpus => 4, :memory => 4096 },
+  	{ :hostname => "node-1", :ip => "192.168.33.11", :cpus => 2, :memory => 2048 },
+  	{ :hostname => "node-2", :ip => "192.168.33.12", :cpus => 2, :memory => 2048 },
 	]
 
 	# Define /etc/hosts for all nodes

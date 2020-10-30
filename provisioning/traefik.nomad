@@ -1,5 +1,4 @@
 job "traefik" {
-  region      = "global"
   datacenters = ["dc1"]
 
   constraint {
@@ -11,11 +10,11 @@ job "traefik" {
 
     network {
       port "http" {
-        static = 8080
+        static = 80
       }
 
       port "api" {
-        static = 8081
+        static = 8080
       }
     }
 
@@ -47,9 +46,9 @@ job "traefik" {
         data = <<EOF
 [entryPoints]
   [entryPoints.http]
-    address = ":8080"
+    address = ":80"
   [entryPoints.traefik]
-    address = ":8081"
+    address = ":8080"
 
 [api]
   dashboard = true

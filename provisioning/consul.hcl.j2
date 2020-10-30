@@ -5,3 +5,11 @@ advertise_addr = "{{ansible_facts.eth1.ipv4.address}}"
 bind_addr = "{{ansible_facts.eth1.ipv4.address}}"
 enable_script_checks = true
 retry_join = ["192.168.33.10"]
+
+ports {
+    grpc = 8502
+}
+
+connect {
+    enabled = true
+}

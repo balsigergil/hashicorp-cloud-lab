@@ -60,6 +60,27 @@
         owner: consul
         group: consul
 
+    - name: Create CNI directory
+      file:
+        path: /opt/cni/bin
+        state: directory
+
+    - name: Download CNI plugins
+      unarchive:
+        src: https://github.com/containernetworking/plugins/releases/download/v0.8.7/cni-plugins-linux-amd64-v0.8.7.tgz
+        dest: /opt/cni/bin
+        remote_src: yes
+
+    - name: Config linux bridge
+      blockinfile:
+        path: /etc/sysctl.d/10-bridge.conf
+        state: present
+        create: yes
+        block: |
+          net.bridge.bridge-nf-call-arptables = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.bridge.bridge-nf-call-iptables = 1
+
 - name: Setup Consul server
   hosts: server
   become: yes
