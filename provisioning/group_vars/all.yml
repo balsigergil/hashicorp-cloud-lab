@@ -1,15 +1,15 @@
-consul_version: 1.8.4
+consul_version: 1.9.0
 consul_url: https://releases.hashicorp.com/consul
 consul_key: VRXNV3bMNRJBAEq20xBe+FOBcUO68ztFgHuXkzovO5U=
 
-nomad_version: 1.0.0-beta2
+nomad_version: 1.0.0-beta3
 nomad_url: https://releases.hashicorp.com/nomad
 
-waypoint_version: 0.1.3
+waypoint_version: 0.1.5
 waypoint_url: https://releases.hashicorp.com/waypoint
 
-boundary_version: 0.1.1
+boundary_version: 0.1.2
 boundary_url: https://releases.hashicorp.com/boundary
 
-vault_version: 1.5.5
+vault_version: 1.6.0
 vault_url: https://releases.hashicorp.com/vault
