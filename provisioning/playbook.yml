@@ -9,11 +9,15 @@
         block: "{{etc_hosts}}"
         state: present
 
-    - name: Install unzip
+    - name: Install packages
       apt:
-        name: unzip
+        name: "{{item}}"
         state: present
         update_cache: yes
+      with_items:
+        - unzip
+        - openjdk-11-jdk
+        - qemu
 
     - name: Download Consul binary
       unarchive:
@@ -182,7 +186,7 @@
     - name: Enable and start Consul service
       service:
         name: consul
-        state: started
+        state: restarted
         enabled: yes
 
     - name: Create Nomad service
@@ -193,7 +197,7 @@
     - name: Enable and start Nomad service
       service:
         name: nomad
-        state: started
+        state: restarted
         enabled: yes
 
 - name: Install Waypoint
@@ -272,7 +276,7 @@
     - name: Enable and start Vault service
       service:
         name: vault
-        state: started
+        state: restarted
         enabled: yes
 
     - name: Add Vault address env variable
