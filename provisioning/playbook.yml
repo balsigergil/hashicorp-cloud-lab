@@ -24,7 +24,6 @@
         src: "{{consul_url}}/{{consul_version}}/consul_{{consul_version}}_linux_amd64.zip"
         dest: /usr/local/bin
         remote_src: yes
-        creates: /usr/local/bin/consul
 
     - name: Setup bash autocompletion
       lineinfile: 
@@ -71,7 +70,7 @@
 
     - name: Download CNI plugins
       unarchive:
-        src: https://github.com/containernetworking/plugins/releases/download/v0.8.7/cni-plugins-linux-amd64-v0.8.7.tgz
+        src: "https://github.com/containernetworking/plugins/releases/download/v{{cni_plugins_version}}/cni-plugins-linux-amd64-v{{cni_plugins_version}}.tgz"
         dest: /opt/cni/bin
         remote_src: yes
 
@@ -124,7 +123,6 @@
         src: "{{nomad_url}}/{{nomad_version}}/nomad_{{nomad_version}}_linux_amd64.zip"
         dest: /usr/local/bin
         remote_src: yes
-        creates: /usr/local/bin/nomad
 
     - name: Setup bash autocompletion
       lineinfile: 
@@ -200,23 +198,6 @@
         state: restarted
         enabled: yes
 
-- name: Install Waypoint
-  hosts: server
-  become: yes
-  tasks:
-    - name: Download Waypoint binary
-      unarchive:
-        src: "{{waypoint_url}}/{{waypoint_version}}/waypoint_{{waypoint_version}}_linux_amd64.zip"
-        dest: /usr/local/bin
-        remote_src: yes
-        creates: /usr/local/bin/waypoint
-
-    - name: Setup bash autocompletion
-      lineinfile: 
-        path: /home/vagrant/.bashrc
-        line: complete -C /usr/local/bin/waypoint waypoint
-        state: present
-
 - name: Install Vault server
   hosts: server
   become: yes
@@ -226,7 +207,6 @@
         src: "{{vault_url}}/{{vault_version}}/vault_{{vault_version}}_linux_amd64.zip"
         dest: /usr/local/bin
         remote_src: yes
-        creates: /usr/local/bin/vault
     
     - name: Setup bash autocompletion
       lineinfile: 
@@ -283,4 +263,36 @@
       lineinfile:
         path: /home/vagrant/.bashrc
         line: "export VAULT_ADDR='http://{{ansible_facts.eth1.ipv4.address}}:8200'"
+        state: present
+
+- name: Install Waypoint
+  hosts: server
+  become: yes
+  tasks:
+    - name: Download Waypoint binary
+      unarchive:
+        src: "{{waypoint_url}}/{{waypoint_version}}/waypoint_{{waypoint_version}}_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: yes
+
+    - name: Setup bash autocompletion
+      lineinfile: 
+        path: /home/vagrant/.bashrc
+        line: complete -C /usr/local/bin/waypoint waypoint
+        state: present
+
+- name: Install Boundary
+  hosts: server
+  become: yes
+  tasks:
+    - name: Download Boundary binary
+      unarchive:
+        src: "{{boundary_url}}/{{boundary_version}}/boundary_{{boundary_version}}_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: yes
+
+    - name: Setup bash autocompletion
+      lineinfile: 
+        path: /home/vagrant/.bashrc
+        line: complete -C /usr/local/bin/boundary boundary
         state: present

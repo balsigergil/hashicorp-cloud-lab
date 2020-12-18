@@ -13,3 +13,5 @@ boundary_url: https://releases.hashicorp.com/boundary
 
 vault_version: 1.6.0
 vault_url: https://releases.hashicorp.com/vault
+
+cni_plugins_version: 0.9.0
