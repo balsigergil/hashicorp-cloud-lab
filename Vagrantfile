@@ -19,7 +19,6 @@ Vagrant.configure("2") do |config|
   NODES.each do |node|
 
     config.vm.define node[:hostname] do |cfg|
-
       cfg.vm.box = "bento/ubuntu-18.04"
   
       cfg.vm.network "private_network", ip: node[:ip]
@@ -31,9 +30,9 @@ Vagrant.configure("2") do |config|
         vb.cpus = node[:cpus]
       end
   
-    end
+    end # End config.vm.define
 
-  end
+  end # End NODES.each
   
   config.vm.provision :ansible_local do |ansible|
     ansible.playbook = "provisioning/playbook.yml"
@@ -47,4 +46,4 @@ Vagrant.configure("2") do |config|
     }
   end
 
-end
+end # End Vagrant.configure

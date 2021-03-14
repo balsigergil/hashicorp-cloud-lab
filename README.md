@@ -26,7 +26,6 @@ This Vagrantfile deploys the following services on 3 virtual machines :
 It uses [Ansible](https://docs.ansible.com/ansible/latest/index.html) to provision all machines.
 
 ## TODO
-- Integrate [Terraform](https://www.terraform.io/)
 - Setup a load balancer (Fabio, Traefik or HAProxy)
 - Setup [ELK Stack](https://www.elastic.co/what-is/elk-stack)
 - Integrate [Waypoint](https://www.waypointproject.io/)

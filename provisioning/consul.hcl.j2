@@ -6,6 +6,10 @@ bind_addr = "{{ansible_facts.eth1.ipv4.address}}"
 enable_script_checks = true
 retry_join = ["192.168.33.10"]
 
+connect {
+    enabled = true
+}
+
 ports {
     grpc = 8502
 }

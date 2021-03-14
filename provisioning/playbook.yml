@@ -296,3 +296,19 @@
         path: /home/vagrant/.bashrc
         line: complete -C /usr/local/bin/boundary boundary
         state: present
+
+- name: Install Terraform
+  hosts: server
+  become: yes
+  tasks:
+    - name: Download Terraform binary
+      unarchive:
+        src: "{{terraform_url}}/{{terraform_version}}/terraform_{{terraform_version}}_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: yes
+
+    - name: Setup bash autocompletion
+      lineinfile: 
+        path: /home/vagrant/.bashrc
+        line: complete -C /usr/local/bin/terraform terraform
+        state: present
