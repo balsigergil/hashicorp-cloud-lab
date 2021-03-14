@@ -17,8 +17,8 @@ job "wordpress-mysql" {
             }
 
             resources {
-                cpu    = 300
-                memory = 1024
+                cpu    = 100
+                memory = 512
             }
         }
 
@@ -58,8 +58,8 @@ job "wordpress-mysql" {
             }
 
             resources {
-                cpu    = 200
-                memory = 512
+                cpu    = 100
+                memory = 128
             }
         }
         
