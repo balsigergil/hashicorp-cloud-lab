@@ -13,7 +13,7 @@ job "wordpress-mysql" {
             }
 
             config {
-                image = "mysql:5.6"
+                image = "mysql:5.7"
             }
 
             resources {
@@ -28,7 +28,7 @@ job "wordpress-mysql" {
 
         service {
             name = "database"
-            port = "3306"
+            port = 3306
 
             connect {
                 sidecar_service {}
@@ -37,6 +37,11 @@ job "wordpress-mysql" {
     }
 
     group "wordpress" {
+        constraint {
+            attribute = "${node.unique.name}"
+            value     = "server"
+        }
+
         task "wordpress" {
             driver = "docker"
 
@@ -63,7 +68,7 @@ job "wordpress-mysql" {
 
             port "http" {
                 to = 80
-                static = 8080
+                static = 8000
             }
         }
 
