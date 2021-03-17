@@ -6,9 +6,9 @@ Vagrant.configure("2") do |config|
   etc_hosts = ""
 
 	NODES = [
-  	{ :hostname => "server", :ip => "192.168.33.10", :cpus => 4, :memory => 4096 },
-  	{ :hostname => "node-1", :ip => "192.168.33.11", :cpus => 2, :memory => 2048 },
-  	{ :hostname => "node-2", :ip => "192.168.33.12", :cpus => 2, :memory => 2048 },
+  	{ :hostname => "server", :ip => "192.168.33.10", :cpus => 4, :memory => 8192 },
+  	{ :hostname => "node-1", :ip => "192.168.33.11", :cpus => 4, :memory => 4096 },
+  	{ :hostname => "node-2", :ip => "192.168.33.12", :cpus => 4, :memory => 4096 },
 	]
 
 	# Define /etc/hosts for all nodes
@@ -36,11 +36,6 @@ Vagrant.configure("2") do |config|
   
   config.vm.provision :ansible_local do |ansible|
     ansible.playbook = "provisioning/playbook.yml"
-    ansible.groups = {
-      "consul" => ["server", "node-1", "node-2"],
-      "nomad" => ["server", "node-1", "node-2"],
-      "nomad_clients" => ["node-1", "node-2"]
-    }
     ansible.extra_vars = {
       etc_hosts: etc_hosts
     }

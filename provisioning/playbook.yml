@@ -162,16 +162,6 @@
         dest: /etc/nomad.d/server.hcl
         mode: 0640
 
-- name: Setup Nomad nodes
-  hosts: nomad_clients
-  become: yes
-  tasks:
-    - name: Create client config file
-      template:
-        src: nomad_client.hcl.j2
-        dest: /etc/nomad.d/client.hcl
-        mode: 0640
-
 - name: Consul and Nomad services
   hosts: all
   become: yes

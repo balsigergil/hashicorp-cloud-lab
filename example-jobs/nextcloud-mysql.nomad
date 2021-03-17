@@ -2,18 +2,28 @@ job "nextcloud-mysql" {
     datacenters = ["dc1"]
 
     group "database" {
+        constraint {
+            attribute = "${node.unique.name}"
+            value     = "node-1"
+        }
+
         task "database" {
             driver = "docker"
+
+            config {
+                image = "mysql:5.7"
+
+                mount {
+                    target = "/var/lib/mysql"
+                    source = "${NOMAD_JOB_NAME}-dbdata"
+                }
+            }
 
             env {
                 MYSQL_ROOT_PASSWORD = "root"
                 MYSQL_DATABASE = "nextcloud"
                 MYSQL_USER = "nextcloud"
                 MYSQL_PASSWORD = "nextcloud"
-            }
-
-            config {
-                image = "mysql:5.7"
             }
 
             resources {
@@ -47,6 +57,11 @@ job "nextcloud-mysql" {
 
             config {
                 image = "nextcloud"
+
+                mount {
+                    target = "/var/www/html"
+                    source = "${NOMAD_JOB_NAME}-www"
+                }
             }
 
             env {

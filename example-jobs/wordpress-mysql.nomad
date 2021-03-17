@@ -2,18 +2,28 @@ job "wordpress-mysql" {
     datacenters = ["dc1"]
 
     group "database" {
+        constraint {
+            attribute = "${node.unique.name}"
+            value     = "node-1"
+        }
+
         task "database" {
             driver = "docker"
+
+            config {
+                image = "mysql:5.7"
+                
+                mount {
+                    target = "/var/lib/mysql"
+                    source = "${NOMAD_JOB_NAME}-dbdata"
+                }
+            }
 
             env {
                 MYSQL_ROOT_PASSWORD = "root"
                 MYSQL_DATABASE = "wordpress"
                 MYSQL_USER = "wordpress"
                 MYSQL_PASSWORD = "wordpress"
-            }
-
-            config {
-                image = "mysql:5.7"
             }
 
             resources {
@@ -47,6 +57,11 @@ job "wordpress-mysql" {
 
             config {
                 image = "wordpress"
+
+                mount {
+                    target = "/var/www/html"
+                    source = "${NOMAD_JOB_NAME}-wwwdata"
+                }
             }
 
             env {
@@ -79,8 +94,8 @@ job "wordpress-mysql" {
             check {
                 type = "http"
                 path = "/"
-                interval = "10s"
-                timeout = "5s"
+                interval = "6s"
+                timeout = "3s"
             }
 
             connect {

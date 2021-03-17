@@ -1,3 +1,22 @@
 datacenter = "dc1"
 data_dir = "/opt/nomad"
 bind_addr = "{{ansible_facts.eth1.ipv4.address}}"
+
+client {
+  enabled = true
+  network_interface = "eth1"
+}
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
+
+plugin "docker" {
+  config {
+    volumes {
+      enabled = true
+    }
+  }
+}
