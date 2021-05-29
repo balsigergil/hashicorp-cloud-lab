@@ -1,5 +1,5 @@
 ---
-- name: Install Consul
+- name: Install all nodes
   hosts: all
   become: yes
   tasks:
@@ -17,7 +17,7 @@
       with_items:
         - unzip
         - openjdk-11-jdk
-        - qemu
+        - qemu-system
 
     - name: Download Consul binary
       unarchive:
@@ -84,22 +84,6 @@
           net.bridge.bridge-nf-call-ip6tables = 1
           net.bridge.bridge-nf-call-iptables = 1
 
-- name: Setup Consul server
-  hosts: server
-  become: yes
-  tasks:
-    - name: Create Consul server configuration file
-      template:
-        src: consul_server.hcl.j2
-        dest: /etc/consul.d/server.hcl
-        mode: 0640
-        owner: consul
-        group: consul
-
-- name: Install Nomad
-  hosts: all
-  become: yes
-  tasks:
     - name: Get Docker installer script
       get_url:
         url: https://get.docker.com
@@ -152,20 +136,6 @@
         line: "export NOMAD_ADDR='http://{{ansible_facts.eth1.ipv4.address}}:4646'"
         state: present
 
-- name: Setup Nomad server
-  hosts: server
-  become: yes
-  tasks:
-    - name: Create Nomad server configuration file
-      template:
-        src: nomad_server.hcl.j2
-        dest: /etc/nomad.d/server.hcl
-        mode: 0640
-
-- name: Consul and Nomad services
-  hosts: all
-  become: yes
-  tasks:
     - name: Create Consul service
       copy:
         src: consul.service
@@ -188,10 +158,24 @@
         state: restarted
         enabled: yes
 
-- name: Install Vault server
+- name: Setup server
   hosts: server
   become: yes
   tasks:
+    - name: Create Consul server configuration file
+      template:
+        src: consul_server.hcl.j2
+        dest: /etc/consul.d/server.hcl
+        mode: 0640
+        owner: consul
+        group: consul
+
+    - name: Create Nomad server configuration file
+      template:
+        src: nomad_server.hcl.j2
+        dest: /etc/nomad.d/server.hcl
+        mode: 0640
+
     - name: Download Vault binary
       unarchive:
         src: "{{vault_url}}/{{vault_version}}/vault_{{vault_version}}_linux_amd64.zip"
@@ -255,10 +239,6 @@
         line: "export VAULT_ADDR='http://{{ansible_facts.eth1.ipv4.address}}:8200'"
         state: present
 
-- name: Install Waypoint
-  hosts: server
-  become: yes
-  tasks:
     - name: Download Waypoint binary
       unarchive:
         src: "{{waypoint_url}}/{{waypoint_version}}/waypoint_{{waypoint_version}}_linux_amd64.zip"
@@ -271,10 +251,6 @@
         line: complete -C /usr/local/bin/waypoint waypoint
         state: present
 
-- name: Install Boundary
-  hosts: server
-  become: yes
-  tasks:
     - name: Download Boundary binary
       unarchive:
         src: "{{boundary_url}}/{{boundary_version}}/boundary_{{boundary_version}}_linux_amd64.zip"
@@ -287,10 +263,6 @@
         line: complete -C /usr/local/bin/boundary boundary
         state: present
 
-- name: Install Terraform
-  hosts: server
-  become: yes
-  tasks:
     - name: Download Terraform binary
       unarchive:
         src: "{{terraform_url}}/{{terraform_version}}/terraform_{{terraform_version}}_linux_amd64.zip"

@@ -26,3 +26,10 @@ This Vagrantfile deploys the following services on 3 virtual machines :
 **Note**: The Nomad server is a Nomad client too.
 
 It uses [Ansible](https://docs.ansible.com/ansible/latest/index.html) to provision all machines.
+
+## Known issues
+
+- When using Consul Service mesh Envoy crashed :
+    ```
+    envoy_bootstrap: error creating bootstrap configuration for Connect proxy sidecar: exit status 1
+    ```
