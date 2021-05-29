@@ -5,13 +5,13 @@ Vagrant.configure("2") do |config|
 
   etc_hosts = ""
 
-	NODES = [
-  	{ :hostname => "server", :ip => "192.168.33.10", :cpus => 4, :memory => 8192 },
-  	{ :hostname => "node-1", :ip => "192.168.33.11", :cpus => 4, :memory => 4096 },
-  	{ :hostname => "node-2", :ip => "192.168.33.12", :cpus => 4, :memory => 4096 },
-	]
+  NODES = [
+    { :hostname => "server", :ip => "192.168.33.10", :cpus => 4, :memory => 8192 },
+    { :hostname => "node-1", :ip => "192.168.33.11", :cpus => 4, :memory => 4096 },
+    { :hostname => "node-2", :ip => "192.168.33.12", :cpus => 4, :memory => 4096 },
+  ]
 
-	# Define /etc/hosts for all nodes
+  # Define /etc/hosts for all nodes
   NODES.each do |node|
     etc_hosts += node[:ip] + "   " + node[:hostname] + "\n"
   end
@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
   NODES.each do |node|
 
     config.vm.define node[:hostname] do |cfg|
-      cfg.vm.box = "bento/ubuntu-18.04"
+      cfg.vm.box = "bento/debian-10"
   
       cfg.vm.network "private_network", ip: node[:ip]
       cfg.vm.hostname = node[:hostname]

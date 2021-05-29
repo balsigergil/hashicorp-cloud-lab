@@ -1,20 +1,20 @@
-consul_version: 1.9.4
+consul_version: 1.9.5
 consul_url: https://releases.hashicorp.com/consul
 consul_key: VRXNV3bMNRJBAEq20xBe+FOBcUO68ztFgHuXkzovO5U=
 
-nomad_version: 1.0.4
+nomad_version: 1.1.0
 nomad_url: https://releases.hashicorp.com/nomad
 
-waypoint_version: 0.2.3
+waypoint_version: 0.3.2
 waypoint_url: https://releases.hashicorp.com/waypoint
 
-boundary_version: 0.1.8
+boundary_version: 0.2.2
 boundary_url: https://releases.hashicorp.com/boundary
 
-vault_version: 1.7.0-rc1
+vault_version: 1.7.2
 vault_url: https://releases.hashicorp.com/vault
 
-terraform_version: 0.14.7
+terraform_version: 0.15.4
 terraform_url: https://releases.hashicorp.com/terraform
 
 cni_plugins_version: 0.9.1
