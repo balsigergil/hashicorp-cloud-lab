@@ -2,6 +2,10 @@
 
 The goal of this [Vagrantfile](https://github.com/balsigergil/hashicorp-vagrant-lab/blob/master/Vagrantfile) is to try some of [HashiCorp](https://www.hashicorp.com/)'s products and simulate a small cloud infrastructure in a virtualized environment with Vagrant.
 
+| [Nomad dashboard](http://192.168.33.10:4646/ui) | [Consul dashboard](http://192.168.33.10:8500/ui) |
+| :---------------------------------------------: | :----------------------------------------------: |
+|             ![](.github/nomad.png)              |             ![](.github/consul.png)              |
+
 ## Getting started
 
 **Prerequisite**: [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) must be installed on your machine.
@@ -26,10 +30,3 @@ This Vagrantfile deploys the following services on 3 virtual machines :
 **Note**: The Nomad server is a Nomad client too.
 
 It uses [Ansible](https://docs.ansible.com/ansible/latest/index.html) to provision all machines.
-
-## Known issues
-
-- When using Consul Service mesh Envoy crashed :
-    ```
-    envoy_bootstrap: error creating bootstrap configuration for Connect proxy sidecar: exit status 1
-    ```
