@@ -11,13 +11,9 @@
 
     - name: Install packages
       apt:
-        name: "{{item}}"
+        name: ["unzip", "openjdk-11-jdk", "qemu-system"]
         state: present
         update_cache: yes
-      with_items:
-        - unzip
-        - openjdk-11-jdk
-        - qemu-system
 
     - name: Download Consul binary
       unarchive:
