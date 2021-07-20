@@ -26,7 +26,7 @@
         remote_src: yes
 
     - name: Setup bash autocompletion
-      lineinfile: 
+      lineinfile:
         path: /home/vagrant/.bashrc
         line: complete -C /usr/local/bin/consul consul
         state: present
@@ -40,20 +40,19 @@
         shell: /bin/false
         state: present
 
-    - name: Create Consul data directory
-      file:
-        path: /opt/consul
-        owner: consul
-        group: consul
-        recurse: yes
-        state: directory
-    
     - name: Create Consul configuration directory
       file:
         path: /etc/consul.d
         state: directory
         owner: consul
         group: consul
+
+    - name: Create Consul data directory
+      file:
+        path: /opt/consul
+        owner: consul
+        group: consul
+        state: directory
 
     - name: Create Consul configuration file
       template:
@@ -87,12 +86,12 @@
     - name: Get Docker installer script
       get_url:
         url: https://get.docker.com
-        dest: ./get-docker.sh
-        mode: u+x
+        dest: /tmp/get-docker.sh
+        mode: 0755
 
     - name: Install Docker
-      shell: 
-        cmd: ./get-docker.sh
+      shell:
+        cmd: /tmp/get-docker.sh
         executable: /bin/sh
         creates: /usr/bin/docker
 
@@ -109,7 +108,7 @@
         remote_src: yes
 
     - name: Setup bash autocompletion
-      lineinfile: 
+      lineinfile:
         path: /home/vagrant/.bashrc
         line: complete -C /usr/local/bin/nomad nomad
         state: present
@@ -118,7 +117,7 @@
       file:
         path: /opt/nomad
         state: directory
-    
+
     - name: Create Nomad configuration directory
       file:
         path: /etc/nomad.d
@@ -141,22 +140,10 @@
         src: consul.service
         dest: /etc/systemd/system/consul.service
 
-    - name: Enable and start Consul service
-      service:
-        name: consul
-        state: restarted
-        enabled: yes
-
     - name: Create Nomad service
       copy:
         src: nomad.service
         dest: /etc/systemd/system/nomad.service
-
-    - name: Enable and start Nomad service
-      service:
-        name: nomad
-        state: restarted
-        enabled: yes
 
 - name: Setup server
   hosts: server
@@ -181,9 +168,9 @@
         src: "{{vault_url}}/{{vault_version}}/vault_{{vault_version}}_linux_amd64.zip"
         dest: /usr/local/bin
         remote_src: yes
-    
+
     - name: Setup bash autocompletion
-      lineinfile: 
+      lineinfile:
         path: /home/vagrant/.bashrc
         line: complete -C /usr/local/bin/vault vault
         state: present
@@ -199,7 +186,7 @@
         create_home: no
         shell: /bin/false
         state: present
-    
+
     - name: Create Vault configuration directory
       file:
         path: /etc/vault.d
@@ -246,7 +233,7 @@
         remote_src: yes
 
     - name: Setup bash autocompletion
-      lineinfile: 
+      lineinfile:
         path: /home/vagrant/.bashrc
         line: complete -C /usr/local/bin/waypoint waypoint
         state: present
@@ -258,7 +245,7 @@
         remote_src: yes
 
     - name: Setup bash autocompletion
-      lineinfile: 
+      lineinfile:
         path: /home/vagrant/.bashrc
         line: complete -C /usr/local/bin/boundary boundary
         state: present
@@ -270,7 +257,24 @@
         remote_src: yes
 
     - name: Setup bash autocompletion
-      lineinfile: 
+      lineinfile:
         path: /home/vagrant/.bashrc
         line: complete -C /usr/local/bin/terraform terraform
         state: present
+
+- name: Setup node services
+  hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Enable and start Consul service
+      service:
+        name: consul
+        state: restarted
+        enabled: yes
+
+    - name: Enable and start Nomad service
+      service:
+        name: nomad
+        state: restarted
+        enabled: yes

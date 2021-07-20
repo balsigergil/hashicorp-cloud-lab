@@ -12,10 +12,10 @@ job "wordpress-mysql" {
 
             config {
                 image = "mysql:5.7"
-                
+
                 mount {
                     target = "/var/lib/mysql"
-                    source = "${NOMAD_JOB_NAME}-dbdata"
+                    source = "${NOMAD_JOB_NAME}-mysqldata"
                 }
             }
 
