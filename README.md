@@ -2,7 +2,7 @@
 
 The goal of this [Vagrantfile](https://github.com/balsigergil/hashicorp-vagrant-lab/blob/master/Vagrantfile) is to try some of [HashiCorp](https://www.hashicorp.com/)'s products and simulate a small cloud infrastructure in a virtualized environment with Vagrant.
 
-| [Nomad dashboard](http://192.168.33.10:4646/ui) | [Consul dashboard](http://192.168.33.10:8500/ui) |
+| [Nomad dashboard](http://192.168.56.10:4646/ui) | [Consul dashboard](http://192.168.56.10:8500/ui) |
 | :---------------------------------------------: | :----------------------------------------------: |
 |             ![](.github/nomad.png)              |             ![](.github/consul.png)              |
 
@@ -22,10 +22,10 @@ vagrant up
 
 This Vagrantfile deploys the following services on 3 virtual machines :
 
-- 1 Consul server (VM 1) : [http://192.168.33.10:8500/ui](http://192.168.33.10:8500/ui)
-- 1 Nomad server (VM 1) : [http://192.168.33.10:4646/ui](http://192.168.33.10:4646/ui)
-- 1 Vault server (VM 1) : [http://192.168.33.10:8200/ui](http://192.168.33.10:8200/ui)
-- 3 Nomad clients (VM 1, 2 and 3) : 192.168.33.10, 192.168.33.11, 192.168.33.12
+- 1 Consul server (VM 1) : [http://192.168.56.10:8500/ui](http://192.168.56.10:8500/ui)
+- 1 Nomad server (VM 1) : [http://192.168.56.10:4646/ui](http://192.168.56.10:4646/ui)
+- 1 Vault server (VM 1) : [http://192.168.56.10:8200/ui](http://192.168.56.10:8200/ui)
+- 3 Nomad clients (VM 1, 2 and 3) : 192.168.56.10, 192.168.56.11, 192.168.56.12
 
 **Note**: The Nomad server is a Nomad client too.
 

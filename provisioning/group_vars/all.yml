@@ -1,11 +1,11 @@
-consul_version: 1.10.3
+consul_version: 1.10.4
 consul_url: https://releases.hashicorp.com/consul
 consul_key: VRXNV3bMNRJBAEq20xBe+FOBcUO68ztFgHuXkzovO5U=
 
-nomad_version: 1.1.6
+nomad_version: 1.2.1
 nomad_url: https://releases.hashicorp.com/nomad
 
-vault_version: 1.8.4
+vault_version: 1.9.0
 vault_url: https://releases.hashicorp.com/vault
 
 waypoint_version: 0.6.1
