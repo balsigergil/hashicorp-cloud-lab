@@ -4,7 +4,7 @@ encrypt = "{{consul_key}}"
 advertise_addr = "{{ansible_facts.eth1.ipv4.address}}"
 bind_addr = "{{ansible_facts.eth1.ipv4.address}}"
 
-retry_join = ["192.168.56.10"]
+retry_join = ["192.168.95.10"]
 
 connect {
     enabled = true
