@@ -25,11 +25,6 @@ job "wordpress-mysql" {
                 MYSQL_USER = "wordpress"
                 MYSQL_PASSWORD = "wordpress"
             }
-
-            resources {
-                cpu    = 100
-                memory = 512
-            }
         }
 
         network {
@@ -71,13 +66,8 @@ job "wordpress-mysql" {
                 WORDPRESS_DB_NAME = "wordpress"
                 WORDPRESS_DEBUG = "1"
             }
-
-            resources {
-                cpu    = 100
-                memory = 128
-            }
         }
-        
+
         network {
             mode = "bridge"
 

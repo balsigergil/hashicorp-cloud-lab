@@ -32,7 +32,7 @@ job "traefik" {
       driver = "docker"
 
       config {
-        image        = "traefik:2.4"
+        image        = "traefik:latest"
         network_mode = "host"
 
         volumes = [
@@ -63,11 +63,6 @@ job "traefik" {
 EOF
 
         destination = "local/traefik.toml"
-      }
-
-      resources {
-        cpu    = 100
-        memory = 128
       }
     }
   }

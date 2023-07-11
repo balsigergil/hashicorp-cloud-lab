@@ -23,16 +23,11 @@ job "teamcity" {
                     source = "${NOMAD_JOB_NAME}-server-logs"
                 }
             }
-
-            resources {
-                cpu    = 1000
-                memory = 2048
-            }
         }
 
         network {
             mode = "bridge"
-            
+
             port "http" {
                 to = 8111
                 static = 8111
@@ -70,13 +65,8 @@ job "teamcity" {
             env {
                 SERVER_URL = "http://${NOMAD_UPSTREAM_ADDR_teamcity-server}"
             }
-
-            resources {
-                cpu    = 400
-                memory = 1024
-            }
         }
-        
+
         network {
             mode = "bridge"
         }

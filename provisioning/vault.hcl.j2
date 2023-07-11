@@ -3,13 +3,9 @@ listener "tcp" {
   tls_disable = true
 }
 
-storage "raft" {
-  path = "/opt/raft"
-  node_id = "raft_node_1"
-}
+storage "consul" {}
 
 api_addr = "http://{{ansible_facts.eth1.ipv4.address}}:8200"
-cluster_addr = "http://{{ansible_facts.eth1.ipv4.address}}:8201"
-
+cluster_addr = "https://{{ansible_facts.eth1.ipv4.address}}:8201"
 ui = true
 disable_mlock = true
